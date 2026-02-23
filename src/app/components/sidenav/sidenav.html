@@ -1,0 +1,88 @@
+
+<!-- drawer init and toggle -->
+<div class="text-center absolute z-0 top-40 left-2">
+   <button
+(click)="toggle()"
+
+   class="inline-flex items-center justify-center text-white bg-mauve-950 box-border border border-transparent hover:bg-amber-300 focus:ring-4 focus:ring-amber-200 shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none" type="button" data-drawer-target="drawer-right-example" data-drawer-show="drawer-right-example" data-drawer-placement="right" aria-controls="drawer-right-example">
+   Open
+   </button>
+</div>
+
+
+
+
+  <div id="drawer-right-example"
+  class="fixed z-50 inset-y-0 right-0 left-0
+    md:left-auto md:w-96
+     h-screen
+    p-6 overflow-y-auto
+    transition-transform duration-300 ease-out
+    bg-mauve-900 bg-no-repeat bg-cover
+    text-white " tabindex="-1" aria-labelledby="drawer-right-label"
+ [ngClass]="{
+
+    'translate-x-0': opened,
+    'translate-x-full': !opened
+  }"
+
+  >
+   <div class="flex items-center justify-between pb-4 mb-6 border-b border-white/10">
+      <h5 id="drawer-right-example" class="CinzelFont inline-flex items-center text-2xl font-bold text-fg-brand-strong-strong text-white">
+         <svg class="w-5 h-5 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+        Localizaciones
+      </h5>
+      <button
+(click)="clear()"
+
+      type="button" data-drawer-hide="drawer-right-example" aria-controls="drawer-right-example" class="text-white bg-danger-strong hover:text-heading rounded-base w-9 h-9 absolute top-2.5 end-2.5 flex items-center justify-center">
+         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/></svg>
+         <span class="sr-only">Close menu</span>
+      </button>
+   </div>
+
+   <div class="mb-8">
+ <p class="mb-2 text-sm text-stone-400 uppercase tracking-wide ">Estás muy cerca<a href="#" class="font-medium  underline hover:no-underline"></a> de estos escenarios</p>
+
+   <p class="text-2xl text-white font-bold"></p>
+   </div>
+
+
+<div class="mb-8 rounded-lg overflow-hidden">
+  <img src=""
+    class="w-full h-48 object-cover"
+  >
+</div>
+
+
+   <div class="mb-8 text-center">
+<div class="mb-5 mt-5 text-md text-stone-400 font-bold">
+
+  <p class="text-xs uppercase tracking-widest text-stone-200 mb-2">blablabla</p>Escene:
+    <p class="mt-4 text-lg italic text-white">
+</div>
+
+ <p class="mb-4 text-sm uppercase tracking-wide text-stone-400">Personajes</p>
+
+<div class="space-y-4">
+
+
+ <div class="flex justify-center items-center-safe gap-4">
+      <img
+        class="w-12 h-12 rounded-full object-cover border border-white/20"
+        src=""
+      >
+
+      <div>
+        <p class="text-sm font-medium text-white">
+
+        </p>
+        <p class="text-xs text-stone-400">
+
+        </p>
+      </div>
+    </div>
+
+
+
+</div>

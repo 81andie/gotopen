@@ -25,7 +25,11 @@
               }
             ],
             "styles": [
+               "node_modules/ol/ol.css",
               "src/styles.css"
+            ],
+             "scripts": [
+              "./node_modules/ol/dist/ol.js"
             ]
           },
           "configurations": {

@@ -15,6 +15,7 @@ import { fromLonLat } from 'ol/proj';
 import { Icon } from 'ol/style';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
+
 import Overlay from 'ol/Overlay';
 
 
@@ -68,10 +69,7 @@ export class Mapa implements OnInit {
 
 
   getAlLocalize() {
-
     this.gotGeoService.getLocalization().subscribe((data) => {
-
-
 
       const features = data.features.map((item) => {
         // console.log(item)
@@ -88,8 +86,11 @@ export class Mapa implements OnInit {
         feature.setStyle(new Style({
 
           image: new Icon({
+            anchor: [0.5, 1],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'pixels',
             src: 'assets/pin-point.png',
-            scale: 0.1
+            scale: 0.060
           }),
 
         }));
@@ -146,7 +147,7 @@ export class Mapa implements OnInit {
             </p>
 
             <!-- Título -->
-          <h2 class="text-lg font-semibold text-black leading-tight">
+          <h2 class="text-md font-semibold text-black leading-tight">
            ${feature?.get('name')}
           </h2>
 

@@ -17,6 +17,7 @@ import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 
 import Overlay from 'ol/Overlay';
+import StadiaMaps from 'ol/source/StadiaMaps';
 
 
 @Component({
@@ -29,15 +30,21 @@ export class Mapa implements OnInit {
 
 
   private gotGeoService = inject(GotGeoService)
+  public mapState = inject(GotGeoService);
   private markers: GotGeometry[] = []
 
 
   private source = new OSM();
+
+
   private overviewMapControl = new OverviewMap({
     layers: [
       new TileLayer({
-        source: this.source,
+        source: new StadiaMaps({
+        layer: 'alidade_smooth_dark',
+        retina: true,
       }),
+    })
     ],
 
 
@@ -51,13 +58,16 @@ export class Mapa implements OnInit {
       controls: defaultControls().extend([this.overviewMapControl]),
       layers: [
         new TileLayer({
-          source: this.source,
+          source:  new StadiaMaps({
+        layer: 'alidade_smooth',
+        retina: true,
+         }),
         }),
       ],
       target: 'map',
       view: new View({
         center: [311158.68373997946, 5157606.481663526],
-        zoom: 14,
+        zoom: 5,
       }),
     });
 
@@ -69,18 +79,24 @@ export class Mapa implements OnInit {
 
 
   getAlLocalize() {
-    this.gotGeoService.getLocalization().subscribe((data) => {
+    this.mapState.getLocalization().subscribe((data) => {
 
       const features = data.features.map((item) => {
-        // console.log(item)
-
         const feature = new Feature({
           geometry: new Point(fromLonLat([item.geometry.coordinates[0], item.geometry.coordinates[1]]))
         })
 
+
         feature.setProperties({
+          id: item.properties.id,
+          country: item.properties.country,
           name: item.properties.real_place,
-          image: item.properties.place_image
+          image: item.properties.place_image,
+          actors:item.properties.actors,
+          escene:item.properties.scene,
+          series:item.properties.series,
+          latitude:item.geometry.coordinates[0],
+          longitude:item.geometry.coordinates[1]
         });
 
         feature.setStyle(new Style({
@@ -88,7 +104,7 @@ export class Mapa implements OnInit {
           image: new Icon({
             anchor: [0.5, 1],
             anchorXUnits: 'fraction',
-            anchorYUnits: 'pixels',
+            anchorYUnits: 'fraction',
             src: 'assets/pin-point.png',
             scale: 0.060
           }),
@@ -126,15 +142,18 @@ export class Mapa implements OnInit {
       }
 
       this.map?.on('click', (evt) => {
+
+
         const feature = this.map?.forEachFeatureAtPixel(
           evt.pixel,
           (feature) => feature
         );
 
+
         disposePopover();
         if (feature) {
           const coordinates = (feature.getGeometry() as Point).getCoordinates()
-
+          const coordinatesAll: [number, number] = [coordinates[0], coordinates[1]];
 
           console.log(feature?.get('name'))
 
@@ -165,6 +184,29 @@ export class Mapa implements OnInit {
           `
           popup.setPosition(coordinates);
 
+          this.mapState.setLocation({
+            type: 'FeatureCollection',
+            features: [{
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                coordinates: coordinatesAll
+              },
+              properties: {
+                real_place: feature.get('name'),
+                place_image: feature.get('image'),
+                latitude: feature.get('latitude'),
+                longitude: feature.get('longitude'),
+                id: feature.get('id'),
+                series: feature.get('series'),
+                scene: feature.get('scene'),
+                country: feature.get('country'),
+                actors: feature.get('actors'),
+                place_logo: ''
+              }
+            }]
+          });
+
         } else {
           popup.setPosition(undefined);
         }
@@ -173,6 +215,8 @@ export class Mapa implements OnInit {
 
 
   }
+
+
 }
 
 

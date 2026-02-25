@@ -4,3 +4,8 @@
 @import "flowbite/src/themes/default";
 @plugin "flowbite/plugin";
 @source "../node_modules/flowbite";
+
+body{
+  font-family: 'Cinzel', serif;
+    letter-spacing: 0.05em;
+}

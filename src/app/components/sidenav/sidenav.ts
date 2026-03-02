@@ -11,13 +11,13 @@ import { GotGeoJson } from '../../../interfaces/got.interface';
 })
 export class Sidenav {
 
-      constructor(@Inject(PLATFORM_ID) platformId: Object) {
+  constructor(@Inject(PLATFORM_ID) platformId: Object) {
 
     effect(() => {
     this.opened = !!this.localization()
     });
 
- 
+
 
   }
 
@@ -25,8 +25,6 @@ export class Sidenav {
  private mapState = inject(GotGeoService)
  public localization = this.mapState.selectLocation
  opened = false;
-
-
 
 
   toggle() {

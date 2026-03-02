@@ -24,4 +24,6 @@ export class GotGeoService {
     this._selectLocation.set(properties);
   }
 
+  
+
 }

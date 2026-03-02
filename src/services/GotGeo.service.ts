@@ -17,6 +17,11 @@ export class GotGeoService {
   selectLocation = this._selectLocation.asReadonly();
   searchLocalition = this._searchLocation.asReadonly()
 
+
+   getLocalizationPrueba(){
+  return this.http.get<[GotGeometry]>(this.geoLocalize)
+}
+
   getLocalization(): Observable<GotGeoJson> {
     return this.http.get<GotGeoJson>(this.geoLocalize)
   }

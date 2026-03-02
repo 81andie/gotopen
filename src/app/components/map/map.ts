@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, Inject, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import Style from 'ol/style/Style';
 import OverviewMap from 'ol/control/OverviewMap.js';
 import { defaults as defaultControls } from 'ol/control/defaults.js';
@@ -7,17 +7,21 @@ import OSM from 'ol/source/OSM.js';
 import TileLayer from 'ol/layer/Tile.js';
 import View from 'ol/View.js';
 import { GotGeoService } from '../../../services/GotGeo.service';
-import { GotGeometry } from '../../../interfaces/got.interface';
-import { CommonModule } from '@angular/common';
+import { GotGeometry, GotProperties } from '../../../interfaces/got.interface';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import Feature from 'ol/Feature';
 import { Point } from 'ol/geom';
 import { fromLonLat } from 'ol/proj';
 import { Icon } from 'ol/style';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
+import GeoJSON from 'ol/format/GeoJSON';
+import { toLonLat } from 'ol/proj';
+
 
 import Overlay from 'ol/Overlay';
 import StadiaMaps from 'ol/source/StadiaMaps';
+import { boundingExtent } from 'ol/extent';
 
 
 @Component({
@@ -33,6 +37,45 @@ export class Mapa implements OnInit {
   public mapState = inject(GotGeoService);
   private markers: GotGeometry[] = []
 
+  public mapStateUpdate = inject(GotGeoService)
+
+  isBrowser: any;
+
+  constructor(@Inject(PLATFORM_ID) platformId: Object,
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+
+    effect(() => {
+      const selected = this.mapStateUpdate.searchLocalition()
+      if (!selected.length || !this.map) return
+      const projectedCoords = selected.map(p =>
+        fromLonLat([p.longitude, p.latitude])
+      );
+
+      if (projectedCoords.length === 1) {
+        this.map.getView().animate({
+          center: projectedCoords[0],
+          zoom: 13,
+          duration: 800,
+        });
+        return;
+      }
+
+      const extent = boundingExtent(projectedCoords);
+
+      this.map.getView().fit(extent, {
+        padding: [20, 20, 20, 20],
+        duration: 800,
+        maxZoom: 12,
+      });
+
+
+
+
+    })
+
+
+  }
 
   private source = new OSM();
 
@@ -41,10 +84,10 @@ export class Mapa implements OnInit {
     layers: [
       new TileLayer({
         source: new StadiaMaps({
-        layer: 'alidade_smooth_dark',
-        retina: true,
-      }),
-    })
+          layer: 'alidade_smooth_dark',
+          retina: true,
+        }),
+      })
     ],
 
 
@@ -58,10 +101,10 @@ export class Mapa implements OnInit {
       controls: defaultControls().extend([this.overviewMapControl]),
       layers: [
         new TileLayer({
-          source:  new StadiaMaps({
-        layer: 'alidade_smooth',
-        retina: true,
-         }),
+          source: new StadiaMaps({
+            layer: 'alidade_smooth',
+            retina: true,
+          }),
         }),
       ],
       target: 'map',
@@ -72,6 +115,8 @@ export class Mapa implements OnInit {
     });
 
     this.getAlLocalize()
+    this.getPrueba()
+
 
 
   }
@@ -79,10 +124,14 @@ export class Mapa implements OnInit {
 
 
   getAlLocalize() {
+
     this.mapState.getLocalization().subscribe((data) => {
 
+      let feature;
+
       const features = data.features.map((item) => {
-        const feature = new Feature({
+
+        feature = new Feature({
           geometry: new Point(fromLonLat([item.geometry.coordinates[0], item.geometry.coordinates[1]]))
         })
 
@@ -92,11 +141,11 @@ export class Mapa implements OnInit {
           country: item.properties.country,
           name: item.properties.real_place,
           image: item.properties.place_image,
-          actors:item.properties.actors,
-          escene:item.properties.scene,
-          series:item.properties.series,
-          latitude:item.geometry.coordinates[0],
-          longitude:item.geometry.coordinates[1]
+          actors: item.properties.actors,
+          escene: item.properties.scene,
+          series: item.properties.series,
+          latitude: item.geometry.coordinates[0],
+          longitude: item.geometry.coordinates[1]
         });
 
         feature.setStyle(new Style({
@@ -145,9 +194,13 @@ export class Mapa implements OnInit {
 
 
         const feature = this.map?.forEachFeatureAtPixel(
-          evt.pixel,
-          (feature) => feature
+          evt.pixel, (feature) => feature
+
+
         );
+
+
+
 
 
         disposePopover();
@@ -204,17 +257,57 @@ export class Mapa implements OnInit {
                 actors: feature.get('actors'),
                 place_logo: ''
               }
+
+
+
+
             }]
+
+
+
+
           });
+
 
         } else {
           popup.setPosition(undefined);
         }
+
       })
+
     })
 
-
   }
+
+
+  getPrueba() {
+
+    this.gotGeoService.getLocalizationPrueba().subscribe((data: GotGeometry[]) => {
+      this.map?.on('dblclick', (event) => {
+        this.map?.forEachFeatureAtPixel(event.pixel, (feature) => {
+
+          const properties = feature.getProperties() as GotProperties;
+
+          const geometry = feature.getGeometry() as Point;
+          const coordinates = geometry.getCoordinates();
+
+          const [longitude, latitude] = toLonLat((feature.getGeometry() as Point).getCoordinates());
+
+
+          this.mapStateUpdate.setSearchLocation([{ ...properties, longitude: longitude, latitude: latitude, }])
+
+
+        });
+      });
+
+
+    })
+  }
+
+
+
+
+
 
 
 }

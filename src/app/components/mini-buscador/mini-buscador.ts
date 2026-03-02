@@ -1,11 +1,60 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { GotGeoService } from '../../../services/GotGeo.service';
+import { GotFeature } from '../../../interfaces/got.interface';
 
 @Component({
   selector: 'app-mini-buscador',
-  imports: [],
+  imports: [CommonModule,FormsModule],
   templateUrl: './mini-buscador.html',
   styleUrl: './mini-buscador.css',
 })
-export class MiniBuscador {
+export class MiniBuscador implements OnInit {
+
+  public mapStateUpdated = inject(GotGeoService);
+  public allMarkers: GotFeature[] = [];
+  public inputLocalization = "";
+  localization = this.mapStateUpdated.searchLocalition;
+  public result: GotFeature[] = [];
+
+
+   getInputLocalization() {
+
+    const input = this.inputLocalization.trim().toLowerCase()
+    let filteredFeatures = this.allMarkers.filter(item =>
+      item.properties.real_place.toLowerCase().includes(input) ||
+      item.properties.country.toLowerCase() === input
+    );
+
+    console.log(filteredFeatures)
+
+    if (filteredFeatures.length > 0) {
+
+      const propsWithCoords = filteredFeatures.map(f => ({
+        ...f.properties,
+        latitude: f.geometry.coordinates[1],
+        longitude: f.geometry.coordinates[0]
+      }));
+
+
+
+      this.mapStateUpdated.setSearchLocation(propsWithCoords);
+    }
+  }
+
+
+getAllMarkers() {
+    this.mapStateUpdated.getLocalizationMarkers().subscribe((geoJson: any) => {
+      this.allMarkers = geoJson.features || []
+        this.getInputLocalization()
+
+    })
+  }
+
+
+ngOnInit():void{
+  this.getAllMarkers()
+}
 
 }

@@ -12,8 +12,10 @@ export class GotGeoService {
   private geoLocalize = 'assets/prueba.geojson';
 
   private _selectLocation = signal<GotGeoJson | null>(null);
+  private _searchLocation = signal<Array<GotFeature['properties'] & { latitude: number, longitude: number }>>([]);
 
   selectLocation = this._selectLocation.asReadonly();
+  searchLocalition = this._searchLocation.asReadonly()
 
   getLocalization(): Observable<GotGeoJson> {
     return this.http.get<GotGeoJson>(this.geoLocalize)
@@ -24,6 +26,13 @@ export class GotGeoService {
     this._selectLocation.set(properties);
   }
 
-  
+  getLocalizationMarkers() {
+    return this.http.get<[GotFeature]>(this.geoLocalize)
+  }
+  setSearchLocation(properties: Array<GotFeature['properties'] & { latitude: number, longitude: number }>) {
+    this._searchLocation.set(properties)
+  }
+
+
 
 }

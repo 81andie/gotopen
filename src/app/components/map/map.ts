@@ -11,12 +11,14 @@ import { GotGeometry, GotProperties } from '../../../interfaces/got.interface';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import Feature from 'ol/Feature';
 import { Point } from 'ol/geom';
-import { fromLonLat } from 'ol/proj';
+import { fromLonLat, toLonLat } from 'ol/proj';
 import { Icon } from 'ol/style';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
-import { toLonLat } from 'ol/proj';
+import { getDistance } from 'ol/sphere';
+import * as olSphere from 'ol/sphere';
+import type { Coordinate } from 'ol/coordinate';
 
 
 import Overlay from 'ol/Overlay';
@@ -36,6 +38,8 @@ export class Mapa implements OnInit {
   private gotGeoService = inject(GotGeoService)
   public mapState = inject(GotGeoService);
   private markers: GotGeometry[] = []
+  private vectorSource!: VectorSource;
+  private overlay:any;
 
   public mapStateUpdate = inject(GotGeoService)
 
@@ -116,6 +120,7 @@ export class Mapa implements OnInit {
 
     this.getAlLocalize()
     this.getPrueba()
+    this.getNearestPoint()
 
 
 
@@ -163,12 +168,12 @@ export class Mapa implements OnInit {
         return feature
       })
 
-      const vectorSource = new VectorSource({
+      this.vectorSource = new VectorSource({
         features: features,
       });
 
       const vectorLayer = new VectorLayer({
-        source: vectorSource,
+        source: this.vectorSource,
       });
 
       this.map?.addLayer(vectorLayer)
@@ -201,14 +206,12 @@ export class Mapa implements OnInit {
 
 
 
-
-
         disposePopover();
         if (feature) {
           const coordinates = (feature.getGeometry() as Point).getCoordinates()
           const coordinatesAll: [number, number] = [coordinates[0], coordinates[1]];
 
-          console.log(feature?.get('name'))
+          // console.log(feature?.get('name'))
 
           element.innerHTML = `
            <div class="w-64 space-y-4 font-sans bg-stone-100 rounded-lg">
@@ -302,13 +305,64 @@ export class Mapa implements OnInit {
 
 
     })
+
+
   }
 
 
+  getNearestPoint() {
+
+    const container = document.getElementById('popupClickLocalization')!;
+    const content = document.getElementById('popup-content1');
+    const closer = document.getElementById('popup-closer1')!;
+
+    if (!this.overlay) {
+    this.overlay = new Overlay({
+      element: container,
+      autoPan: { animation: { duration: 250 } },
+    });
+    this.map?.addOverlay(this.overlay);
+
+    // ⚡ Evento de cierre
+    closer.onclick = () => {
+      this.overlay.setPosition(undefined);
+
+      return false;
+    };
+  }
+
+
+    this.map?.addOverlay(this.overlay);
+
+
+    this.map?.on('singleclick', (evt) => {
+
+      if (!this.vectorSource) return;
+
+      const clickCoordinate = evt.coordinate;
+
+      content!.innerHTML = '<p>Estás aquí:</p>';
+      this.overlay.setPosition(clickCoordinate);
+
+      const closestFeature = this.vectorSource.getClosestFeatureToCoordinate(clickCoordinate);
+
+      if (!closestFeature) return;
+
+      const geometry = closestFeature.getGeometry() as Point;
+      const closestCoordinate = geometry.getCoordinates();
+
+      this.map?.getView().animate({
+        center: closestCoordinate,
+        zoom: 15,
+        duration: 800,
+      });
 
 
 
+    })
 
+
+  }
 
 }
 

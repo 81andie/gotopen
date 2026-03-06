@@ -295,8 +295,6 @@ export class Mapa implements OnInit {
           const coordinates = geometry.getCoordinates();
 
           const [longitude, latitude] = toLonLat((feature.getGeometry() as Point).getCoordinates());
-
-
           this.mapStateUpdate.setSearchLocation([{ ...properties, longitude: longitude, latitude: latitude, }])
 
 
@@ -353,7 +351,7 @@ export class Mapa implements OnInit {
 
       this.map?.getView().animate({
         center: closestCoordinate,
-        zoom: 15,
+        zoom: 18,
         duration: 800,
       });
 

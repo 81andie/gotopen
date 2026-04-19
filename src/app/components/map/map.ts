@@ -19,6 +19,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { getDistance } from 'ol/sphere';
 import * as olSphere from 'ol/sphere';
 import type { Coordinate } from 'ol/coordinate';
+import XYZ from 'ol/source/XYZ';
 
 
 import Overlay from 'ol/Overlay';
@@ -87,10 +88,8 @@ export class Mapa implements OnInit {
   private overviewMapControl = new OverviewMap({
     layers: [
       new TileLayer({
-        source: new StadiaMaps({
-          layer: 'alidade_smooth_dark',
-          apiKey: '2a85ba10-edc8-416e-b902-4baccea6710d',
-          retina: true,
+        source: new XYZ({
+         url: 'https://{a-c}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
         }),
       })
     ],
@@ -106,10 +105,8 @@ export class Mapa implements OnInit {
       controls: defaultControls().extend([this.overviewMapControl]),
       layers: [
         new TileLayer({
-          source: new StadiaMaps({
-            layer: 'alidade_smooth',
-            apiKey: '2a85ba10-edc8-416e-b902-4baccea6710d',
-            retina: true,
+          source: new XYZ({
+           url: 'https://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
           }),
         }),
       ],

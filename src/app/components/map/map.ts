@@ -89,6 +89,7 @@ export class Mapa implements OnInit {
       new TileLayer({
         source: new StadiaMaps({
           layer: 'alidade_smooth_dark',
+          apiKey: '2a85ba10-edc8-416e-b902-4baccea6710d',
           retina: true,
         }),
       })
@@ -107,6 +108,7 @@ export class Mapa implements OnInit {
         new TileLayer({
           source: new StadiaMaps({
             layer: 'alidade_smooth',
+            apiKey: '2a85ba10-edc8-416e-b902-4baccea6710d',
             retina: true,
           }),
         }),

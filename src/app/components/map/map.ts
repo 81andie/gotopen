@@ -85,7 +85,8 @@ export class Mapa implements OnInit {
   private source = new OSM();
 
 
-  private overviewMapControl = new OverviewMap({
+  public overviewMapControl = new OverviewMap({
+
     layers: [
       new TileLayer({
         source: new XYZ({
@@ -93,6 +94,10 @@ export class Mapa implements OnInit {
         }),
       })
     ],
+
+
+
+
 
 
   })
@@ -103,6 +108,7 @@ export class Mapa implements OnInit {
   ngOnInit(): void {
     this.map = new Map({
       controls: defaultControls().extend([this.overviewMapControl]),
+
       layers: [
         new TileLayer({
           source: new XYZ({
@@ -115,11 +121,24 @@ export class Mapa implements OnInit {
         center: [311158.68373997946, 5157606.481663526],
         zoom: 5,
       }),
+
+
+
+
     });
 
     this.getAlLocalize()
     this.getPrueba()
     this.getNearestPoint()
+
+
+    setTimeout(() => {
+    const el = document.querySelector('.ol-overviewmap') as HTMLElement;
+    if (el) {
+      el.style.bottom = '4em';
+      el.style.left = '0.5em';
+    }
+  });
 
 
 

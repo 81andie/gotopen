@@ -40,7 +40,7 @@ export class Mapa implements OnInit {
   public mapState = inject(GotGeoService);
   private markers: GotGeometry[] = []
   private vectorSource!: VectorSource;
-  private overlay:any;
+  private overlay: any;
 
   public mapStateUpdate = inject(GotGeoService)
 
@@ -90,7 +90,7 @@ export class Mapa implements OnInit {
     layers: [
       new TileLayer({
         source: new XYZ({
-         url: 'https://{a-c}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
+          url: 'https://{a-c}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
         }),
       })
     ],
@@ -112,7 +112,7 @@ export class Mapa implements OnInit {
       layers: [
         new TileLayer({
           source: new XYZ({
-           url: 'https://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
+            url: 'https://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
           }),
         }),
       ],
@@ -133,12 +133,15 @@ export class Mapa implements OnInit {
 
 
     setTimeout(() => {
-    const el = document.querySelector('.ol-overviewmap') as HTMLElement;
-    if (el) {
-      el.style.bottom = '4em';
-      el.style.left = '0.5em';
-    }
-  });
+      const el = document.querySelector('.ol-overviewmap') as HTMLElement;
+      const control = document.querySelector('.ol-overviewmap')as HTMLElement;
+      if (el || control) {
+        el.style.bottom = '3.5em';
+        el.style.left= '0.5em';
+
+
+      }
+    });
 
 
 
@@ -333,19 +336,19 @@ export class Mapa implements OnInit {
     const closer = document.getElementById('popup-closer1')!;
 
     if (!this.overlay) {
-    this.overlay = new Overlay({
-      element: container,
-      autoPan: { animation: { duration: 250 } },
-    });
-    this.map?.addOverlay(this.overlay);
+      this.overlay = new Overlay({
+        element: container,
+        autoPan: { animation: { duration: 250 } },
+      });
+      this.map?.addOverlay(this.overlay);
 
-    // ⚡ Evento de cierre
-    closer.onclick = () => {
-      this.overlay.setPosition(undefined);
+      // ⚡ Evento de cierre
+      closer.onclick = () => {
+        this.overlay.setPosition(undefined);
 
-      return false;
-    };
-  }
+        return false;
+      };
+    }
 
 
     this.map?.addOverlay(this.overlay);

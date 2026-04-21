@@ -83,8 +83,4 @@ font-family: 'Cinzel', serif;
 
 
 
-.ol-overviewmap.ol-unselectable.ol-control {
-  position: absolute !important;
-  left: 0.5em !important;
-  bottom: 2em !important; /* súbelo aquí */
-}
+

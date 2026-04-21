@@ -136,7 +136,7 @@ export class Mapa implements OnInit {
       const el = document.querySelector('.ol-overviewmap') as HTMLElement;
       const control = document.querySelector('.ol-overviewmap')as HTMLElement;
       if (el || control) {
-        el.style.bottom = '3.5em';
+        el.style.bottom = '4.5em';
         el.style.left= '0.5em';
 
 

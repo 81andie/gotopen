@@ -123,8 +123,6 @@ export class Mapa implements OnInit {
       }),
 
 
-
-
     });
 
     this.getAlLocalize()

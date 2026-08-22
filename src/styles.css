@@ -9,3 +9,9 @@ body{
   font-family: 'Cinzel', serif;
     letter-spacing: 0.05em;
 }
+
+
+.ol-control button {
+  width: 44px;
+  height: 44px;
+}

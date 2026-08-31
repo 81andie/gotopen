@@ -90,7 +90,7 @@ export class Mapa implements OnInit {
     layers: [
       new TileLayer({
         source: new XYZ({
-          url: `https://api.maptiler.com/maps/backdrop-v4/style.json?key=${this.key}`
+          url: `https://api.maptiler.com/maps/backdrop-v4/256/{z}/{x}/{y}.png?key=${this.key}`
         }),
       })
     ],
@@ -118,7 +118,7 @@ export class Mapa implements OnInit {
       layers: [
         new TileLayer({
           source: new XYZ({
-            url: `https://api.maptiler.com/maps/backdrop-v4/style.json?key=${key}`
+            url: `https://api.maptiler.com/maps/backdrop-v4/256/{z}/{x}/{y}.png?key=${this.key}`
           }),
         }),
       ],

@@ -84,13 +84,13 @@ export class Mapa implements OnInit {
 
   private source = new OSM();
 
-
+  private key='6sLC1CEfGPuxGLdTE3sO';
   public overviewMapControl = new OverviewMap({
 
     layers: [
       new TileLayer({
         source: new XYZ({
-          url: 'https://api.maptiler.com/maps/backdrop-v4/style.json?key=6sLC1CEfGPuxGLdTE3sO'
+          url: `https://api.maptiler.com/maps/backdrop-v4/style.json?key=${this.key}`
         }),
       })
     ],
@@ -106,13 +106,19 @@ export class Mapa implements OnInit {
   private map: Map | null = null;
 
   ngOnInit(): void {
+
+    const key='6sLC1CEfGPuxGLdTE3sO'
     this.map = new Map({
+
+
       controls: defaultControls().extend([this.overviewMapControl]),
+
+
 
       layers: [
         new TileLayer({
           source: new XYZ({
-            url: 'https://api.maptiler.com/maps/backdrop-v4/style.json?key=6sLC1CEfGPuxGLdTE3sO'
+            url: `https://api.maptiler.com/maps/backdrop-v4/style.json?key=${key}`
           }),
         }),
       ],
